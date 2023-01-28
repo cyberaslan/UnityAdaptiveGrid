@@ -3,58 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-
 [Serializable]
-public abstract class ScaleStrategy : Strategy<ScaleStrategy.MethodType, ScaleStrategy>
+public class StretchScale : Strategy
 {
-    static ScaleStrategy() {
-        InitializeMap();
-    }
-    public override System.Enum GetKey() => Method;
-
-    public enum MethodType  { Stretch = 0, Fit = 1, FitWidth = 2, FitHeight = 3 }
-    [SerializeField] public abstract MethodType Method { get; }
-    public abstract void Scale(List<RectTransform> gridChildren);
-    
-   
-}
-
-[Serializable]
-public class StretchScale : ScaleStrategy
-{
-    [SerializeField] public override MethodType Method => MethodType.Stretch;
-    public override void Scale(List<RectTransform> gridChildren) {
+    public override System.Enum SelectorInInspector => AdaptiveGrid.ScaleMethod.Stretch;
+    public override void Apply(List<RectTransform> elements, RectTransform grid) {
 
     }
 }
-
-
-
 [Serializable]
-public class FitScale : ScaleStrategy
+public class FitScale : Strategy
 {
-    [SerializeField] public override MethodType Method => MethodType.Fit;
-    public override void Scale(List<RectTransform> gridChildren) {
+    public override System.Enum SelectorInInspector => AdaptiveGrid.ScaleMethod.Fit;
+    public override void Apply(List<RectTransform> elements, RectTransform grid) {
 
     }
 }
-
-
 [Serializable]
-public class FitWidthScale : ScaleStrategy
+public class FitWidthScale : Strategy
 {
-    [SerializeField] public override MethodType Method => MethodType.FitWidth;
-    public override void Scale(List<RectTransform> gridChildren) {
+    public override System.Enum SelectorInInspector => AdaptiveGrid.ScaleMethod.FitWidth;
+    public override void Apply(List<RectTransform> elements, RectTransform grid) {
 
     }
 }
-
-
 [Serializable]
-public class FitHeightScale : ScaleStrategy
+public class FitHeightScale : Strategy
 {
-    [SerializeField] public override MethodType Method => MethodType.FitHeight;
-    public override void Scale(List<RectTransform> gridChildren) {
+    public override System.Enum SelectorInInspector => AdaptiveGrid.ScaleMethod.FitHeight;
+    public override void Apply(List<RectTransform> elements, RectTransform grid) {
 
     }
 }

@@ -5,27 +5,48 @@ using System.Reflection;
 using System;
 using System.Linq;
 
-
 [Serializable]
-public abstract class ArrangeStrategy : Strategy<ArrangeStrategy.LayoutType, ArrangeStrategy>
+public class ArrangeFill : Strategy
 {
-    public override System.Enum GetKey() => Layout;
-    static ArrangeStrategy() {
-        InitializeMap();
+
+    public override System.Enum SelectorInInspector => AdaptiveGrid.ArrangeLayout.Fill;
+    public override void Apply(List<RectTransform> elements, RectTransform grid) {
+        
     }
-    public enum LayoutType { Fill = 0, Pack = 1, Grid = 2, FixedRows = 3, FixedColumns = 4 }
-    public abstract LayoutType Layout { get; }
-    public abstract void Arrange(List<RectTransform> gridChildren, RectTransform gridRect);    
 }
-[Serializable]
-public class FillArrange : ArrangeStrategy {
-    public override LayoutType Layout => LayoutType.Fill;
-    public override void Arrange(List<RectTransform> gridChildren, RectTransform gridRect) { }
+public class ArrangePack : Strategy
+{
+    public override System.Enum SelectorInInspector => AdaptiveGrid.ArrangeLayout.Pack;
+    public override void Apply(List<RectTransform> elements, RectTransform grid) {
 
+    }
+}
+public class ArrangeGrid : Strategy
+{
+    public override System.Enum SelectorInInspector => AdaptiveGrid.ArrangeLayout.Grid;
+    public override void Apply(List<RectTransform> elements, RectTransform grid) {
+
+    }
+}
+public class FixedRowsArrange : Strategy
+{
+    public override System.Enum SelectorInInspector => AdaptiveGrid.ArrangeLayout.FixedRows;
+    public override void Apply(List<RectTransform> elements, RectTransform grid) {
+
+    }
+}
+public class FixedColumnsArrange : Strategy
+{
+    public override System.Enum SelectorInInspector => AdaptiveGrid.ArrangeLayout.FixedColumns;
+    public override void Apply(List<RectTransform> elements, RectTransform grid) {
+
+    }
 }
 
+
+/*
 [Serializable]
-public class PackArrange : ArrangeStrategy
+public class PackArrange : Strategy
 {
     public override LayoutType Layout => LayoutType.Pack;
     public override void Arrange(List<RectTransform> gridChildren, RectTransform gridRect) { }
@@ -35,7 +56,7 @@ public class PackArrange : ArrangeStrategy
 
 
 [Serializable]
-public class GridArrange : ArrangeStrategy
+public class GridArrange : Strategy
 {
     public override LayoutType Layout => LayoutType.Grid;
     [SerializeField] private Vector2 test;
@@ -57,16 +78,16 @@ public class GridArrange : ArrangeStrategy
 }
 
 [Serializable]
-public class FixedRowsArrange : ArrangeStrategy
+public class FixedRowsArrange : Strategy
 {
     public override LayoutType Layout => LayoutType.FixedRows;
     public override void Arrange(List<RectTransform> gridChildren, RectTransform gridRect) { }
 
 }
 
-public class FixedColumnsArrange : ArrangeStrategy
+public class FixedColumnsArrange : Strategy
 {
     public override LayoutType Layout => LayoutType.FixedColumns;
     public override void Arrange(List<RectTransform> gridChildren, RectTransform gridRect) { }
 
-}
+}*/
