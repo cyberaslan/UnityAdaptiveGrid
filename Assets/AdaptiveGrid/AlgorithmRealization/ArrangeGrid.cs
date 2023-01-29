@@ -6,11 +6,11 @@ using System;
 using System.Linq;
 
 [Serializable]
-public class ArrangeGrid : Strategy
+public class ArrangeGrid : Algorithm
 {
     public override System.Enum SelectorInInspector => AdaptiveGrid.ArrangeLayout.Grid;
     [SerializeField] GridSize _gridSize = new GridSize(1,1) ;
-    [SerializeField] bool _fitScreen;
+    [SerializeField] bool _fitParent;
     public override void Apply(List<RectTransform> elements, RectTransform grid) {
         GridSize gridSize = _gridSize;
         if (gridSize.Cols == 0 && gridSize.Rows == 0) {
@@ -25,7 +25,7 @@ public class ArrangeGrid : Strategy
         
 
         float colWidth = grid.rect.width / gridSize.Cols;
-        float rowHeight = _fitScreen ? grid.rect.height / gridSize.Rows : colWidth;
+        float rowHeight = _fitParent ? grid.rect.height / gridSize.Rows : colWidth;
 
         for (int i = 0; i < elements.Count; i++) {
             RectTransform element = elements[i];

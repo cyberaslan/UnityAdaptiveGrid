@@ -9,34 +9,24 @@ public class AdaptiveGrid : UIBehaviour
 {
     private event Action SettingsChanged;
 
-    [SerializeField] private RectTransform _gridRect;
-    [SerializeField] List<RectTransform> _gridChildren = new List<RectTransform>();
+    private RectTransform _gridRect;
+    List<RectTransform> _gridChildren = new List<RectTransform>();
 
     private Vector2 _cellSize;
 
     /* Grid arrange and margins*/
     
-    public enum ArrangeLayout { Fill = 0, Pack = 1, Grid = 2, FixedRows = 3, FixedColumns = 4 }
+    public enum ArrangeLayout { Fill = 0, Pack = 1, Grid = 2 }
     [Header("Grid settings")]
     [SerializeField] private ArrangeLayout _arrangeLayout;
-    [SerializeField][SerializeReference] private Strategy _arrangeStrategy;
+    [SerializeField][SerializeReference] private Algorithm _arrangeAlgorithm;
     [SerializeField] Offset _gridMargin;
-    public void SetArrangeLayout(ArrangeLayout newArrangeLayout) {
-        if (newArrangeLayout == _arrangeLayout) return; 
-        _arrangeLayout = newArrangeLayout; 
-        SettingsChanged?.Invoke();
-    }
 
     /* Cell content scaling, padding and spacing */
-    public enum ScaleMethod { Stretch = 0, Fit = 1, FitWidth = 2, FitHeight = 3 }
+    public enum ScaleMethod { Fit = 0, Stretch = 1 }
     [Header("Cell content")]
     [SerializeField] private ScaleMethod _scaleMethod;
-    [SerializeField] [SerializeReference] private Strategy _scaleStrategy;
-    public void SetScaleMethod(ScaleMethod newScaleMethod) {
-        if (newScaleMethod == _scaleMethod) return;
-        _scaleMethod = newScaleMethod;
-        SettingsChanged?.Invoke();
-    }
+    [SerializeField] [SerializeReference] private Algorithm _scaleAlgorithm;
     [SerializeField] Offset _cellPadding;
     [SerializeField] Offset _cellSpacing;
 
@@ -45,24 +35,38 @@ public class AdaptiveGrid : UIBehaviour
         base.Awake();
         _gridRect = GetComponent<RectTransform>();
         CollectChildren();
-        UpdateStrategies();
+        OnSettingsChanged();
     }
     protected override void Start() {
+        base.Start();
         ArrangeChildren();
     }
+
+    public void SetArrangeLayout(ArrangeLayout newArrangeLayout) {
+        if (newArrangeLayout == _arrangeLayout) return;
+        _arrangeLayout = newArrangeLayout;
+        SettingsChanged?.Invoke();
+    }
+
+    public void SetScaleMethod(ScaleMethod newScaleMethod) {
+        if (newScaleMethod == _scaleMethod) return;
+        _scaleMethod = newScaleMethod;
+        SettingsChanged?.Invoke();
+    }
+
     private void CollectChildren() {
         _gridChildren.Clear();
         foreach (RectTransform child in transform) _gridChildren.Add(child);
     }
 
     private void ArrangeChildren() {
-        _arrangeStrategy.Apply(_gridChildren, _gridRect);
-        _scaleStrategy.Apply(_gridChildren, _gridRect);
+        _arrangeAlgorithm.Apply(_gridChildren, _gridRect);
+        _scaleAlgorithm.Apply(_gridChildren, _gridRect);
     }
 
-    private void UpdateStrategies() {
-        StrategyMap.SetStrategy(ref _arrangeStrategy, _arrangeLayout);
-        StrategyMap.SetStrategy(ref _scaleStrategy, _scaleMethod);
+    private void OnSettingsChanged() {
+        AlgorithmMap.SetAlgorithm(ref _arrangeAlgorithm, _arrangeLayout);
+        AlgorithmMap.SetAlgorithm(ref _scaleAlgorithm, _scaleMethod);
     }
 
 
@@ -80,7 +84,7 @@ public class AdaptiveGrid : UIBehaviour
 #if UNITY_EDITOR
     protected override void OnValidate() {
         base.OnValidate();
-        UpdateStrategies();
+        OnSettingsChanged();
         ArrangeChildren();
     }
 #endif
