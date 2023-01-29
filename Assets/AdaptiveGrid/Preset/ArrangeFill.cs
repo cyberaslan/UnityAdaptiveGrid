@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 
 [Serializable]
-public class ArrangeFill : Algorithm
+public class ArrangeFill : AdaptivePreset
 {
 
     public override System.Enum SelectorInInspector => AdaptiveGrid.ArrangeLayout.Fill;

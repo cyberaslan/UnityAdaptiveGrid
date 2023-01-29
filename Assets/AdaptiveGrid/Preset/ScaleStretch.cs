@@ -5,7 +5,7 @@ using System;
 
 
 [Serializable]
-public class ScaleStretch : Algorithm
+public class ScaleStretch : AdaptivePreset
 {
     public override System.Enum SelectorInInspector => AdaptiveGrid.ScaleMethod.Stretch;
     public override void Apply(List<RectTransform> elements, RectTransform grid) {

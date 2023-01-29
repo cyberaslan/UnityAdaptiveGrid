@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 
 [Serializable]
-public class ArrangeGrid : Algorithm
+public class ArrangeGrid : AdaptivePreset
 {
     public override System.Enum SelectorInInspector => AdaptiveGrid.ArrangeLayout.Grid;
     [SerializeField] GridSize _gridSize = new GridSize(1,1) ;

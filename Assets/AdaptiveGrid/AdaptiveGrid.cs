@@ -19,14 +19,14 @@ public class AdaptiveGrid : UIBehaviour
     public enum ArrangeLayout { Fill = 0, Pack = 1, Grid = 2 }
     [Header("Grid settings")]
     [SerializeField] private ArrangeLayout _arrangeLayout;
-    [SerializeField][SerializeReference] private Algorithm _arrangeAlgorithm;
+    [SerializeField][SerializeReference] private AdaptivePreset _arrangeAdaptivePreset;
     [SerializeField] Offset _gridMargin;
 
     /* Cell content scaling, padding and spacing */
-    public enum ScaleMethod { Fit = 0, Stretch = 1 }
+    public enum ScaleMethod { FitImages = 0, Stretch = 1 }
     [Header("Cell content")]
     [SerializeField] private ScaleMethod _scaleMethod;
-    [SerializeField] [SerializeReference] private Algorithm _scaleAlgorithm;
+    [SerializeField] [SerializeReference] private AdaptivePreset _scaleAdaptivePreset;
     [SerializeField] Offset _cellPadding;
     [SerializeField] Offset _cellSpacing;
 
@@ -60,13 +60,13 @@ public class AdaptiveGrid : UIBehaviour
     }
 
     private void ArrangeChildren() {
-        _arrangeAlgorithm.Apply(_gridChildren, _gridRect);
-        _scaleAlgorithm.Apply(_gridChildren, _gridRect);
+        _arrangeAdaptivePreset.Apply(_gridChildren, _gridRect);
+        _scaleAdaptivePreset.Apply(_gridChildren, _gridRect);
     }
 
     private void OnSettingsChanged() {
-        AlgorithmMap.SetAlgorithm(ref _arrangeAlgorithm, _arrangeLayout);
-        AlgorithmMap.SetAlgorithm(ref _scaleAlgorithm, _scaleMethod);
+        AdaptivePreset.ChangeValue(ref _arrangeAdaptivePreset, _arrangeLayout);
+        AdaptivePreset.ChangeValue(ref _scaleAdaptivePreset, _scaleMethod);
     }
 
 
