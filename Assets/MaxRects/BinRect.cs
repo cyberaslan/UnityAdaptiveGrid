@@ -3,8 +3,6 @@ using System;
 /* msmshazan TexturePacker
  * https://github.com/msmshazan/TexturePacker/ */
 
-namespace msmshazan.TexturePacker
-{
     public struct BinRect : IEquatable<BinRect>
     {
         public int x;
@@ -43,4 +41,3 @@ namespace msmshazan.TexturePacker
         public static explicit operator UnityEngine.Rect(BinRect binRect) => new UnityEngine.Rect( (float)binRect.x, (float)binRect.y, (float)binRect.width, (float)binRect.height );
         //public static explicit operator Digit(byte b) => new Digit(b);
     };
-}

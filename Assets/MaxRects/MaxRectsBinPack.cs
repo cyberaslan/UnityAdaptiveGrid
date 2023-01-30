@@ -5,10 +5,8 @@ using UnityEngine;
 /* msmshazan TexturePacker 
  * https://github.com/msmshazan/TexturePacker/ */
 
-namespace msmshazan.TexturePacker
-{
     public class MaxRectsBinPack
-    {
+    { 
         /// Instantiates a bin of size (0,0). Call Init to create a new bin.
         public MaxRectsBinPack() {
             Init(0, 0);
@@ -475,4 +473,3 @@ namespace msmshazan.TexturePacker
             && a.y + a.height <= b.y + b.height;
         }
     };
-}

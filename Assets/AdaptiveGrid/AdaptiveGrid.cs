@@ -15,7 +15,6 @@ public class AdaptiveGrid : UIBehaviour
     private Vector2 _cellSize;
 
     /* Grid arrange and margins*/
-    
     public enum ArrangeLayout { Fill = 0, Pack = 1, Grid = 2 }
     [Header("Grid settings")]
     [SerializeField] private ArrangeLayout _arrangeLayout;
@@ -30,13 +29,13 @@ public class AdaptiveGrid : UIBehaviour
     [SerializeField] Offset _cellPadding;
     [SerializeField] Offset _cellSpacing;
 
-
     protected override void Awake() {
         base.Awake();
         _gridRect = GetComponent<RectTransform>();
         CollectElements();
         OnSettingsChanged();
     }
+
     protected override void Start() {
         base.Start();
         ArrangeElements();
@@ -60,7 +59,6 @@ public class AdaptiveGrid : UIBehaviour
     }
 
     private void ArrangeElements() {
-        Debug.Log("Elements arranged");
         _arrangePreset.Apply(_gridChildren, _gridRect);
         _scalePreset.Apply(_gridChildren, _gridRect);
     }
@@ -69,7 +67,6 @@ public class AdaptiveGrid : UIBehaviour
         AdaptivePreset.ChangeValue(ref _arrangePreset, _arrangeLayout);
         AdaptivePreset.ChangeValue(ref _scalePreset, _scaleMethod);
     }
-
 
     protected override void OnRectTransformDimensionsChange() {
         ArrangeElements();
