@@ -34,12 +34,12 @@ public class AdaptiveGrid : UIBehaviour
     protected override void Awake() {
         base.Awake();
         _gridRect = GetComponent<RectTransform>();
-        CollectChildren();
+        CollectElements();
         OnSettingsChanged();
     }
     protected override void Start() {
         base.Start();
-        ArrangeChildren();
+        ArrangeElements();
     }
 
     public void SetArrangeLayout(ArrangeLayout newArrangeLayout) {
@@ -54,12 +54,13 @@ public class AdaptiveGrid : UIBehaviour
         SettingsChanged?.Invoke();
     }
 
-    private void CollectChildren() {
+    private void CollectElements() {
         _gridChildren.Clear();
         foreach (RectTransform child in transform) _gridChildren.Add(child);
     }
 
-    private void ArrangeChildren() {
+    private void ArrangeElements() {
+        Debug.Log("Elements arranged");
         _arrangePreset.Apply(_gridChildren, _gridRect);
         _scalePreset.Apply(_gridChildren, _gridRect);
     }
@@ -71,25 +72,21 @@ public class AdaptiveGrid : UIBehaviour
 
 
     protected override void OnRectTransformDimensionsChange() {
-        Debug.Log("OnRectTransformDimensionsChange");
-        ArrangeChildren();
+        ArrangeElements();
     }
 
     public void OnTransformChildrenChanged() {
-        Debug.Log("OnTransformChildrenChanged");
-        CollectChildren();
-        ArrangeChildren();
+        CollectElements();
+        ArrangeElements();
     }
 
 #if UNITY_EDITOR
     protected override void OnValidate() {
         base.OnValidate();
         OnSettingsChanged();
-        ArrangeChildren();
+        ArrangeElements();
     }
 #endif
-
-
 }
 [Serializable]
 public struct GridSize  

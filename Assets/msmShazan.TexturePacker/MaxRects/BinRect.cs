@@ -3,7 +3,7 @@ using System;
 /* msmshazan TexturePacker
  * https://github.com/msmshazan/TexturePacker/ */
 
-namespace TexturePacker
+namespace msmshazan.TexturePacker
 {
     public struct BinRect : IEquatable<BinRect>
     {
@@ -39,5 +39,8 @@ namespace TexturePacker
         public static bool operator !=(BinRect rect1, BinRect rect2) {
             return !(rect1 == rect2);
         }
+
+        public static explicit operator UnityEngine.Rect(BinRect binRect) => new UnityEngine.Rect( (float)binRect.x, (float)binRect.y, (float)binRect.width, (float)binRect.height );
+        //public static explicit operator Digit(byte b) => new Digit(b);
     };
 }

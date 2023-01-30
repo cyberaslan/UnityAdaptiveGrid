@@ -3,7 +3,7 @@ using System;
 /* msmshazan TexturePacker
  * https://github.com/msmshazan/TexturePacker/ */
 
-namespace TexturePacker
+namespace msmshazan.TexturePacker
 {
     public struct Point
     {
@@ -24,6 +24,12 @@ namespace TexturePacker
             width = (int)w;
             height = (int)h;
         }
+
+        public RectSize(UnityEngine.Rect rect) {
+            width = (int)rect.width;
+            height = (int)rect.height;
+        }
+
 
         public override bool Equals(object obj) {
             return obj is RectSize && Equals((RectSize)obj);

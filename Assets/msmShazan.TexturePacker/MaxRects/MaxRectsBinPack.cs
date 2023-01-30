@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-/* msmshazan TexturePacker
+/* msmshazan TexturePacker 
  * https://github.com/msmshazan/TexturePacker/ */
 
-namespace TexturePacker
+namespace msmshazan.TexturePacker
 {
     public class MaxRectsBinPack
     {
@@ -43,11 +44,12 @@ namespace TexturePacker
         /// Specifies the different heuristic rules that can be used when deciding where to place a new rectangle.
         public enum FreeRectChoiceHeuristic
         {
+            RectContactPointRule, /// -CP: Choosest the placement where the rectangle touches other rects as much as possible.
             RectBestShortSideFit, /// -BSSF: Positions the rectangle against the short side of a free rectangle into which it fits the best.
             RectBestLongSideFit, /// -BLSF: Positions the rectangle against the long side of a free rectangle into which it fits the best.
             RectBestAreaFit, /// -BAF: Positions the rectangle into the smallest free rect into which it fits.
-            RectBottomLeftRule, /// -BL: Does the Tetris placement.
-            RectContactPointRule /// -CP: Choosest the placement where the rectangle touches other rects as much as possible.
+            RectBottomLeftRule /// -BL: Does the Tetris placement.
+            
         };
 
         /// Inserts the given list of rectangles in an offline/batch mode, possibly rotated.
