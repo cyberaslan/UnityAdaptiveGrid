@@ -2,7 +2,8 @@ using System;
 
 /* msmshazan TexturePacker
  * https://github.com/msmshazan/TexturePacker/ */
-
+namespace msmshazan.TexturePacker
+{
     public struct Point 
     {
         public int x;
@@ -53,4 +54,4 @@ using System;
             return !(size1 == size2);
         }
     };
- 
+ }

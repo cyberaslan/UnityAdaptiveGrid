@@ -4,9 +4,10 @@ using UnityEngine;
 
 /* msmshazan TexturePacker 
  * https://github.com/msmshazan/TexturePacker/ */
-
+namespace msmshazan.TexturePacker
+{
     public class MaxRectsBinPack
-    { 
+    {
         /// Instantiates a bin of size (0,0). Call Init to create a new bin.
         public MaxRectsBinPack() {
             Init(0, 0);
@@ -47,7 +48,7 @@ using UnityEngine;
             RectBestLongSideFit, /// -BLSF: Positions the rectangle against the long side of a free rectangle into which it fits the best.
             RectBestAreaFit, /// -BAF: Positions the rectangle into the smallest free rect into which it fits.
             RectBottomLeftRule /// -BL: Does the Tetris placement.
-            
+
         };
 
         /// Inserts the given list of rectangles in an offline/batch mode, possibly rotated.
@@ -473,3 +474,4 @@ using UnityEngine;
             && a.y + a.height <= b.y + b.height;
         }
     };
+}
