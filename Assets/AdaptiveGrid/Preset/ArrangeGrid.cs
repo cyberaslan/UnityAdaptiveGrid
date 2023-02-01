@@ -12,7 +12,6 @@ namespace CyberAslan.AdaptiveGrid
     {
         public override System.Enum SelectorInInspector => AdaptiveGrid.ArrangeLayout.Grid;
         [SerializeField] GridSize _gridSize = new GridSize(2, 2);
-        [SerializeField] bool _fitParent = true;
 
         public override void Apply(List<RectTransform> elements, RectTransform grid, Offset gridMargin, Offset cellPadding) {
 
@@ -24,7 +23,7 @@ namespace CyberAslan.AdaptiveGrid
             if (gridSize.Rows == 0) gridSize.Rows = (int)Mathf.Ceil((float)elements.Count / gridSize.Cols);
             if (gridSize.Cols == 0) gridSize.Cols = (int)Mathf.Ceil((float)elements.Count / gridSize.Rows);
 
-            LayoutTools.ArrangeElements(elements, grid.rect, gridSize, gridMargin, cellPadding, _fitParent);
+            LayoutTools.ArrangeElements(elements, grid.rect, gridSize, gridMargin, cellPadding);
         }
         
     }

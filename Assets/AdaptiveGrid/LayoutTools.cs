@@ -2,18 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using msmshazan.TexturePacker;
+using System;
 
 namespace CyberAslan.AdaptiveGrid
 {
+    [Serializable]
+    public struct GridSize
+    {
+        public int Rows;
+        public int Cols;
+        public GridSize(int columns, int rows) {
+            Rows = rows;
+            Cols = columns;
+        }
+        public override string ToString() {
+            return $"GridSize {Cols}x{Rows}";
+        }
+    }
+
+    [Serializable]
+    public struct Offset
+    {
+        [Range(0, 0.9f)] public float Horizontal;
+        [Range(0, 0.9f)] public float Vertical;
+    }
     public static class LayoutTools
     {
-        public static RectSize ToRectSize(this Component component) {
-            if (component is UnityEngine.UI.Image img) return new RectSize(img.sprite.rect);
-            if (component is RectTransform rt) return new RectSize(rt.rect);
-            return new RectSize();
-        }
 
+        //Calculate optimal grid size for minimum empty space in container
         public static GridSize OptimalGridSize(List<RectTransform> elements, Rect gridRect, Vector2 contentSize, Offset gridMargin, Offset cellPadding) {
+
             int q = elements.Count;
             int cols = 1;
             int rows = 1;
@@ -42,11 +60,11 @@ namespace CyberAslan.AdaptiveGrid
                     }
                 }
             }
-            return new GridSize(optimalRowColunt, optimalColCount);
+            return new GridSize(optimalColCount, optimalRowColunt);
         }
 
         // Place elements in gridRect
-        public static void ArrangeElements(List<RectTransform> elements, Rect gridRect, GridSize gridSize, Offset gridMargin, Offset cellPadding, bool fitParent = true) {
+        public static void ArrangeElements(List<RectTransform> elements, Rect gridRect, GridSize gridSize, Offset gridMargin, Offset cellPadding) {
             
             float gridWidth = gridRect.width * (1 - gridMargin.Horizontal);
             float gridHeight = gridRect.height * (1- gridMargin.Vertical);
@@ -54,7 +72,7 @@ namespace CyberAslan.AdaptiveGrid
             float cellWidth = gridWidth / gridSize.Cols;
             float cellWidthOffseted = cellWidth * (1 - cellPadding.Horizontal);
 
-            float cellHeigth = fitParent ? gridHeight / gridSize.Rows : cellWidth ;
+            float cellHeigth = gridHeight / gridSize.Rows ;
             float cellHeigthOffseted = cellHeigth * (1 - cellPadding.Vertical);
 
             for (int i = 0; i < elements.Count; i++) {
@@ -72,6 +90,8 @@ namespace CyberAslan.AdaptiveGrid
                     -rowNum *(cellHeigth + cellPadding.Vertical/2) - cellHeigth *element.pivot.y + gridHeight/2);
             }
         }
+
+        //Size of content fitted in container with const aspect ratio
         public static Vector2 FitContent(Vector2 contentSize, Rect container, Offset cellPadding) {
             float contentAspectRatio = contentSize.x / contentSize.y;
 
@@ -92,7 +112,9 @@ namespace CyberAslan.AdaptiveGrid
             newSizeDelta = new Vector2(newSizeDelta.x , newSizeDelta.y );
             return newSizeDelta;
         }
-        public static Rect[] PackRects(RectTransform grid, List<Component> contentList, MaxRectsBinPack.FreeRectChoiceHeuristic packAlgorithm, float scalePrecision, float scaleFactor = 1.0f) {
+
+        //Pack content in grid container (recursive)
+        public static Rect[] PackRects(RectTransform grid, List<UnityEngine.UI.Image> contentList, MaxRectsBinPack.FreeRectChoiceHeuristic packAlgorithm, float scalePrecision, float scaleFactor = 1.0f) {
 
             int width = (int)grid.rect.width;
             int height = (int)grid.rect.height;
@@ -102,9 +124,11 @@ namespace CyberAslan.AdaptiveGrid
 
             for (int i = 0; i < contentList.Count; i++) {
 
-                RectSize rectSize = contentList[i].ToRectSize();
+                RectSize rectSize = contentList[i].sprite != null ? new RectSize(contentList[i].sprite.rect) : new RectSize(contentList[i].GetComponent<RectTransform>().rect);
                 int scaledRectWidth = (int)(rectSize.width * scaleFactor);
                 int scaledRectHeight = (int)(rectSize.height * scaleFactor);
+                if (scaledRectHeight == 0) scaledRectHeight = 1;
+                if (scaledRectWidth == 0) scaledRectWidth = 1;
 
                 //Try to insert content into container
                 BinRect rect = binPacker.Insert(scaledRectWidth, scaledRectHeight, packAlgorithm);
@@ -120,10 +144,5 @@ namespace CyberAslan.AdaptiveGrid
             return packedRects;
         }
     }
-    [System.Serializable]
-    public struct Offset
-    {
-        [Range(0, 0.9f)] public float Horizontal;
-        [Range(0, 0.9f)] public float Vertical;
-    }
+
 }

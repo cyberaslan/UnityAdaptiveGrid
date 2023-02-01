@@ -5,12 +5,12 @@ using System;
 using System.Reflection;
 using System.Linq;
 
+
+
 namespace CyberAslan.AdaptiveGrid {
     [Serializable]
     public abstract class AdaptivePreset : ICloneable
-
     {
-
         public static event Action PresetChanged;
 
         // Initialize dictionary with each AdaptivePreset prototype instance

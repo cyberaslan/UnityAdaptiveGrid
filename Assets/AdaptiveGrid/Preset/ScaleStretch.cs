@@ -6,9 +6,9 @@ using System;
 namespace CyberAslan.AdaptiveGrid
 {
     [Serializable]
-    public class ScaleStretch : AdaptivePreset
+    public class ScaleNone : AdaptivePreset
     {
-        public override System.Enum SelectorInInspector => AdaptiveGrid.ScaleMethod.Stretch;
+        public override System.Enum SelectorInInspector => AdaptiveGrid.ScaleMethod.None;
         public override void Apply(List<RectTransform> elements, RectTransform grid, Offset gridMargin, Offset cellPadding) {
 
         }

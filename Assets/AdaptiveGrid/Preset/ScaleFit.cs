@@ -13,7 +13,6 @@ namespace CyberAslan.AdaptiveGrid
             foreach (RectTransform element in elements) {
                 if (element.TryGetComponent(out Image image)) {
                     if (image.sprite != null) {
-                        //source image content
                         Vector2 contentSize = image.sprite.bounds.size;
                         Vector2 scaledContentSize = LayoutTools.FitContent(contentSize, element.rect, cellPadding);
                         element.sizeDelta = scaledContentSize;
@@ -22,6 +21,5 @@ namespace CyberAslan.AdaptiveGrid
                 }
             }
         }
-
     }
 }

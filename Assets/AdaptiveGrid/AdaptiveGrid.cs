@@ -16,7 +16,7 @@ namespace CyberAslan.AdaptiveGrid
         private Vector2 _cellSize;
 
         /* Grid arrange and margins*/
-        public enum ArrangeLayout { Fill = 0, Pack = 1, Grid = 2 }
+        public enum ArrangeLayout { Fill = 0, Grid = 1, PackByImage = 2 }
         [Header("Grid settings")]
         [SerializeField] private ArrangeLayout _arrangeLayout;
         [SerializeField] [SerializeReference] private AdaptivePreset _arrangePreset;
@@ -24,40 +24,53 @@ namespace CyberAslan.AdaptiveGrid
         [SerializeField] Offset _gridMargin;
 
         /* Cell content scaling, padding and spacing */
-        public enum ScaleMethod { FitImages = 0, Stretch = 1 }
+        public enum ScaleMethod { FitImage = 0, None = 1 }
         [Header("Cell content")]
         [SerializeField] private ScaleMethod _scaleMethod;
         [SerializeField] [SerializeReference] private AdaptivePreset _scalePreset;
         private event Action ScalePresetChanged;
         [SerializeField] Offset _cellPadding;
 
-        protected override void Awake() {
-            base.Awake();
+        //Safe initialization in editor mode & runtime both
+        protected override void OnCanvasHierarchyChanged() {
             _gridRect = GetComponent<RectTransform>();
             CollectElements();
-            ArrangePresetChanged += OnArrangePresetChanged;
-            ScalePresetChanged += OnScalePresetChanged;
         }
+
+        protected override void Awake() {
+            base.Awake();
+
+            ArrangePresetChanged += OnArrangePresetChanged;
+            ScalePresetChanged += OnScalePresetChanged; 
+        }
+
+        protected override void Start() {
+            base.Start();
+            AdjustElements();
+        }
+
         protected override void OnDestroy() {
             ArrangePresetChanged -= OnArrangePresetChanged;
             ScalePresetChanged -= OnScalePresetChanged;
         }
 
-        protected override void Start() {
-            base.Start();
-            ArrangeElements();
-        }
-
-        public void SetArrangeLayout(ArrangeLayout newArrangeLayout) {
+        public void SetArrangePreset(ArrangeLayout newArrangeLayout) {
             if (newArrangeLayout == _arrangeLayout) return;
             _arrangeLayout = newArrangeLayout;
             ArrangePresetChanged?.Invoke();
         }
+        private void OnArrangePresetChanged() {
+            AdaptivePreset.ChangeValue(ref _arrangePreset, _arrangeLayout);
+        }
 
-        public void SetScaleMethod(ScaleMethod newScaleMethod) {
+        public void SetScalePreset(ScaleMethod newScaleMethod) {
             if (newScaleMethod == _scaleMethod) return;
             _scaleMethod = newScaleMethod;
             ScalePresetChanged?.Invoke();
+        }
+
+        private void OnScalePresetChanged() {
+            AdaptivePreset.ChangeValue(ref _scalePreset, _scaleMethod);
         }
 
         private void CollectElements() {
@@ -65,51 +78,36 @@ namespace CyberAslan.AdaptiveGrid
             foreach (RectTransform child in transform) _gridChildren.Add(child);
         }
 
-        private void ArrangeElements() {
+        private void AdjustElements() {
             _arrangePreset.Apply(_gridChildren, _gridRect, _gridMargin, _cellPadding);
             _scalePreset.Apply(_gridChildren, _gridRect, _gridMargin, _cellPadding);
         }
 
-        private void OnArrangePresetChanged() {
-            AdaptivePreset.ChangeValue(ref _arrangePreset, _arrangeLayout);
-        }
-
-        private void OnScalePresetChanged() {
-            AdaptivePreset.ChangeValue(ref _scalePreset, _scaleMethod);
-        }
-
         protected override void OnRectTransformDimensionsChange() {
-            ArrangeElements();
+            AdjustElements();
         }
 
         public void OnTransformChildrenChanged() {
             CollectElements();
-            ArrangeElements();
+            AdjustElements();
         }
+
 
 #if UNITY_EDITOR
         protected override void OnValidate() {
             base.OnValidate();
- 
+            
             if (!_arrangePreset.SelectorInInspector.Equals(_arrangeLayout)) OnArrangePresetChanged();
             if (!_scalePreset.SelectorInInspector.Equals(_scaleMethod)) OnScalePresetChanged();
 
-            ArrangeElements();
+            //  Fixes the warning
+            //  "SendMessage cannot be called during Awake, CheckConsistency, or OnValidate"
+            UnityEditor.EditorApplication.delayCall += OnValidateCallback;
+        }
+        private void OnValidateCallback() {
+            UnityEditor.EditorApplication.delayCall -= OnValidateCallback;
+            AdjustElements();
         }
 #endif
     }
-    [Serializable]
-    public struct GridSize
-    {
-        public int Rows;
-        public int Cols;
-        public GridSize(int rows, int columns) {
-            Rows = rows;
-            Cols = columns;
-        }
-        public override string ToString() {
-            return $"GridSize {Cols}x{Rows}";
-        }
-    }
-
 }
