@@ -4,7 +4,7 @@ using UnityEngine;
 using msmshazan.TexturePacker;
 using System;
 
-namespace CyberAslan.AdaptiveGrid
+namespace AdaptiveGrid
 {
     [Serializable]
     public struct GridSize
@@ -33,15 +33,13 @@ namespace CyberAslan.AdaptiveGrid
         public static GridSize OptimalGridSize(List<RectTransform> elements, Rect gridRect, Vector2 contentSize, Offset gridMargin, Offset cellPadding) {
 
             int q = elements.Count;
-            int cols = 1;
-            int rows = 1;
 
             float minTotalEmptySpace = System.Single.MaxValue;
             int optimalRowColunt = 1;
             int optimalColCount = 1;
 
-            for (cols = 1; cols <= q; cols++) {
-                for (rows = 1; rows <= Mathf.Ceil((float)q / cols); rows++) {
+            for (int cols = 1; cols <= q; cols++) {
+                for (int rows = 1; rows <= Mathf.Ceil((float)q / cols); rows++) {
                     int emptyCells = cols * rows - q;
                     if (emptyCells >= 0) {
 
@@ -65,14 +63,14 @@ namespace CyberAslan.AdaptiveGrid
 
         // Place elements in gridRect
         public static void ArrangeElements(List<RectTransform> elements, Rect gridRect, GridSize gridSize, Offset gridMargin, Offset cellPadding) {
-            
+
             float gridWidth = gridRect.width * (1 - gridMargin.Horizontal);
-            float gridHeight = gridRect.height * (1- gridMargin.Vertical);
+            float gridHeight = gridRect.height * (1 - gridMargin.Vertical);
 
             float cellWidth = gridWidth / gridSize.Cols;
             float cellWidthOffseted = cellWidth * (1 - cellPadding.Horizontal);
 
-            float cellHeigth = gridHeight / gridSize.Rows ;
+            float cellHeigth = gridHeight / gridSize.Rows;
             float cellHeigthOffseted = cellHeigth * (1 - cellPadding.Vertical);
 
             for (int i = 0; i < elements.Count; i++) {
@@ -86,8 +84,8 @@ namespace CyberAslan.AdaptiveGrid
                 element.anchorMin = element.anchorMax = new Vector2(0.5f, 0.5f);
                 element.sizeDelta = new Vector2(cellWidthOffseted, cellHeigthOffseted);
                 element.anchoredPosition = new Vector2(
-                    colNum * (cellWidth + cellPadding.Horizontal/2)+ cellWidth *element.pivot.x - gridWidth/2,
-                    -rowNum *(cellHeigth + cellPadding.Vertical/2) - cellHeigth *element.pivot.y + gridHeight/2);
+                    colNum * (cellWidth + cellPadding.Horizontal / 2) + cellWidth * element.pivot.x - gridWidth / 2,
+                    -rowNum * (cellHeigth + cellPadding.Vertical / 2) - cellHeigth * element.pivot.y + gridHeight / 2);
             }
         }
 
@@ -95,7 +93,7 @@ namespace CyberAslan.AdaptiveGrid
         public static Vector2 FitContent(Vector2 contentSize, Rect container, Offset cellPadding) {
             float contentAspectRatio = contentSize.x / contentSize.y;
 
-            float containerAspectRatio = (container.width)/ (container.height);
+            float containerAspectRatio = (container.width) / (container.height);
 
             float fitRatio = containerAspectRatio / contentAspectRatio;
 
@@ -109,7 +107,7 @@ namespace CyberAslan.AdaptiveGrid
                 //content is too wide
                 newSizeDelta = new Vector2(newSizeDelta.x, newSizeDelta.y * fitRatio);
             }
-            newSizeDelta = new Vector2(newSizeDelta.x , newSizeDelta.y );
+            newSizeDelta = new Vector2(newSizeDelta.x, newSizeDelta.y);
             return newSizeDelta;
         }
 

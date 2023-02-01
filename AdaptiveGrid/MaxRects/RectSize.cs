@@ -4,12 +4,12 @@ using System;
  * https://github.com/msmshazan/TexturePacker/ */
 namespace msmshazan.TexturePacker
 {
-    public struct Point 
+    public struct Point
     {
         public int x;
         public int y;
     };
-   
+
     public struct RectSize : IEquatable<RectSize>
     {
         public int width;
@@ -54,4 +54,4 @@ namespace msmshazan.TexturePacker
             return !(size1 == size2);
         }
     };
- }
+}

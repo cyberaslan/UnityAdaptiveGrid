@@ -7,7 +7,8 @@ using System.Linq;
 
 
 
-namespace CyberAslan.AdaptiveGrid {
+namespace AdaptiveGrid
+{
     [Serializable]
     public abstract class AdaptivePreset : ICloneable
     {
