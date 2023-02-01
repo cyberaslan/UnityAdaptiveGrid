@@ -8,7 +8,7 @@ namespace CyberAslan.AdaptiveGrid
     [Serializable]
     public class ScaleFit : AdaptivePreset
     {
-        public override System.Enum SelectorInInspector => AdaptiveGrid.ScaleMethod.FitImages;
+        public override System.Enum SelectorInInspector => AdaptiveGrid.ScaleMethod.FitImage;
         public override void Apply(List<RectTransform> elements, RectTransform grid, Offset gridMargin, Offset cellPadding) {
             foreach (RectTransform element in elements) {
                 if (element.TryGetComponent(out Image image)) {
