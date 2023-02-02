@@ -1,15 +1,13 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Reflection;
-using System;
 using UnityEngine.UI;
+
 namespace AdaptiveGrid
 {
     [Serializable]
     public class ArrangeFill : AdaptivePreset
     {
-        public override System.Enum SelectorInInspector => AdaptiveGrid.ArrangeLayout.Fill;
         public override void Apply(List<RectTransform> elements, RectTransform grid, Offset gridMargin, Offset cellPadding) {
 
             //Collect elements' content and calculate its average size
@@ -21,7 +19,9 @@ namespace AdaptiveGrid
             foreach (RectTransform element in elements) {
                 if (element.TryGetComponent(out Image image)) {
                     images.Add(image);
-                    if (image.sprite != null) imageWithSpriteCounter++;
+                    if (image.sprite != null) {
+                        imageWithSpriteCounter++;
+                    }
                     accumulatedSize += image.sprite != null ? new Vector2(image.sprite.rect.width, image.sprite.rect.height) : Vector2.zero;
                 }
             }
@@ -30,10 +30,12 @@ namespace AdaptiveGrid
 
 
 
-            //Calculate optimal grid size to arrange elements with minimum empty space
+            //Calculate optimal grid size to arrange elements with min  imum empty space
             GridSize optimalGridSize = LayoutTools.OptimalGridSize(elements, grid.rect, averageContentSize, gridMargin, cellPadding);
 
             LayoutTools.ArrangeElements(elements, grid.rect, optimalGridSize, gridMargin, cellPadding);
         }
+
+        public override System.Enum SelectorInInspector => AdaptiveGrid.ArrangeLayout.Fill;
     }
 }
