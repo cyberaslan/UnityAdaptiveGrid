@@ -27,7 +27,8 @@ namespace AdaptiveGrid
             {
                 gridSize.Cols = (int)Mathf.Ceil((float)elements.Count / gridSize.Rows);
             }
-
+            
+            if(_grid==null) return;
             LayoutTools.ArrangeElements(elements, grid.rect, gridSize, gridMargin, cellPadding);
         }
 
